@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=C1:D0:23:AA:EA:54:5B:D3:04:A6:27:06:63:A6:FE:CE:36:91:94:B8%3Bedu.illinois.cs465.findmybathroom
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    edu.illinois.cs465.findmybathroom
+
+    SHA-1 certificate fingerprint:
+    C1:D0:23:AA:EA:54:5B:D3:04:A6:27:06:63:A6:FE:CE:36:91:94:B8
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCxOa6Ci6pLPiCD5tovwNrAKiBLWZsBma8</string>
+</resources>
