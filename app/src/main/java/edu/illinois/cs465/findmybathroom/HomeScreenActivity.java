@@ -2,7 +2,11 @@ package edu.illinois.cs465.findmybathroom;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +21,18 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private ActivityHomeScreenBinding binding;
+    private ImageButton btnAddBathroom;
+
+    View.OnClickListener handler = new View.OnClickListener(){
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.addButton:
+                    // doStuff
+                    startActivity(new Intent(HomeScreenActivity.this, AddBathroomActivity.class));
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +45,10 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
+        btnAddBathroom.setOnClickListener(handler);
     }
 
     /**

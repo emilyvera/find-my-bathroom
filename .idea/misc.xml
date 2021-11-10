@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/emily/AndroidStudioProjects/find-my-bathroom/app/src/main/res/drawable/buildingname.xml" value="0.1" />
+        <entry key="..\:/Users/emily/AndroidStudioProjects/find-my-bathroom/app/src/main/res/layout/activity_add_bathroom.xml" value="0.268" />
         <entry key="..\:/Users/emily/AndroidStudioProjects/find-my-bathroom/app/src/main/res/layout/activity_home_screen.xml" value="0.10925925925925926" />
       </map>
     </option>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddBathroomActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:text="Add New Location"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:background="#d6e5e7"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Location Type"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_bathroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/checkbox_bathroom"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="4dp"
+                android:text="Bathroom"
+                android:textColor="@color/black"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/text_gas_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/checkbox_gas_station"
+                android:layout_below="@id/text_bathroom"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="4dp"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:text="Gas station"/>
+
+            <CheckBox android:id="@+id/checkbox_bathroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:layout_toRightOf="@id/text_bathroom"
+                android:layout_alignLeft="@id/checkbox_gas_station"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_gas_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkbox_bathroom"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="1dp"
+                android:layout_toRightOf="@id/text_gas_station"
+                android:gravity="top|right" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Building Name"/>
+
+        <EditText
+            android:id="@+id/simpleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buildingname"
+            android:hint="Siebel Center"
+            android:padding="15dp"
+            android:layout_margin="20dp"
+            android:textColorHint="@color/common_google_signin_btn_text_light"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Amenities"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_all_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/checkbox_all_gender"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="4dp"
+                android:text="All-gender bathroom"
+                android:textColor="@color/black"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/text_wheelchair_accessible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/checkbox_wheelchair_accessible"
+                android:layout_below="@id/text_all_gender"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="4dp"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:text="Wheelchair accessible"/>
+
+            <TextView
+                android:id="@+id/text_diaper_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/checkbox_diaper_station"
+                android:layout_below="@id/text_wheelchair_accessible"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="4dp"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:text="Diaper changing station"/>
+
+            <CheckBox android:id="@+id/checkbox_all_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:layout_toRightOf="@id/text_all_gender"
+                android:layout_alignLeft="@id/checkbox_diaper_station"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_wheelchair_accessible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkbox_all_gender"
+                android:layout_marginTop="1dp"
+                android:layout_alignLeft="@id/checkbox_diaper_station"
+                android:layout_toRightOf="@id/text_wheelchair_accessible"
+                android:gravity="top|right" />
+
+            <CheckBox
+                android:id="@+id/checkbox_diaper_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkbox_wheelchair_accessible"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="1dp"
+                android:layout_toRightOf="@id/text_diaper_station"
+                android:gravity="top|right" />
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="15dp"
+            android:backgroundTint="@color/common_google_signin_btn_text_light"
+            android:text="Next" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
