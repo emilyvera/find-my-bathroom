@@ -99,6 +99,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
         btnAddBathroom.setOnClickListener(handler);
     }
@@ -116,7 +117,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
         mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
