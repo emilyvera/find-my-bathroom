@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +24,57 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private ActivityHomeScreenBinding binding;
     private ImageButton btnAddBathroom;
+
+    // Filters start
+
+    public void typeButtonClicked(View v)
+    {
+        CheckedTextView real_view = (CheckedTextView) v;
+        real_view.toggle();
+
+        int new_view = (real_view.isChecked()) ? View.VISIBLE : View.GONE;
+
+        View[] bathroomFilters = {findViewById(R.id.BathroomGender), findViewById(R.id.BathroomWheelchair), findViewById(R.id.BathroomDiaper)};
+        View[] gasStationFilters = {findViewById(R.id.GasStationGrocery), findViewById(R.id.GasStationCarWash)};
+
+        View[] type_to_filter = v.getId() == R.id.BathroomType ? bathroomFilters : gasStationFilters;
+
+        for (View x : type_to_filter) {
+            x.setVisibility(new_view);
+        }
+
+
+
+        LinearLayout features = findViewById(R.id.FeaturesHolder);
+        boolean foundVisibleChild = false;
+        for (int i = 0; i < features.getChildCount(); i++) {
+            View child = features.getChildAt(i);
+            if (child instanceof CheckedTextView && child.getVisibility() == View.VISIBLE) {
+                foundVisibleChild = true;
+            }
+        }
+
+        features.setVisibility(foundVisibleChild ? View.VISIBLE : View.GONE);
+
+
+        findViewById(R.id.VerificationHolder).setVisibility( ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked() ? View.VISIBLE : View.GONE);
+
+    }
+
+    public void filterButtonClicked(View v)
+    {
+        CheckedTextView real_view = (CheckedTextView) v;
+        real_view.toggle();
+    }
+
+    public void filterExpandClicked(View v)
+    {
+        ((CheckedTextView) v).toggle();
+        int new_view = (((CheckedTextView) v).isChecked()) ? View.VISIBLE : View.GONE;
+        findViewById(R.id.FilterHolder).setVisibility(new_view);
+    }
+
+    // Filters end
 
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
@@ -46,7 +99,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
         btnAddBathroom.setOnClickListener(handler);
     }
@@ -68,5 +120,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         LatLng quad = new LatLng(40.107519, -88.22722);
         mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
+        findViewById(R.id.Filters).bringToFront();
     }
 }
