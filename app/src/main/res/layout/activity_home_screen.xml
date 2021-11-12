@@ -17,14 +17,16 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:animateLayoutChanges="true">
 
         <LinearLayout
             android:id="@+id/FilterHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:animateLayoutChanges="true">
 
             <LinearLayout
                 android:id="@+id/TypeHolder"
@@ -82,7 +84,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:animateLayoutChanges="true">
 
                 <TextView
                     android:id="@+id/textView4"
@@ -92,75 +95,91 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <CheckedTextView
-                    android:id="@+id/BathroomGender"
+                <LinearLayout
+                    android:id="@+id/BathroomFilters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
-                    android:gravity="center_vertical"
-                    android:onClick="filterButtonClicked"
-                    android:paddingLeft="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="• All-gender bathroom"
-                    android:visibility="gone" />
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                <CheckedTextView
-                    android:id="@+id/BathroomWheelchair"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
-                    android:gravity="center_vertical"
-                    android:onClick="filterButtonClicked"
-                    android:paddingLeft="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="• Wheelchair accessible"
-                    android:visibility="gone" />
+                    <CheckedTextView
+                        android:id="@+id/BathroomDiaper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:gravity="center_vertical"
+                        android:onClick="filterButtonClicked"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="• Diaper changing station"
+                        android:visibility="visible" />
 
-                <CheckedTextView
-                    android:id="@+id/BathroomDiaper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
-                    android:gravity="center_vertical"
-                    android:onClick="filterButtonClicked"
-                    android:paddingLeft="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="• Diaper changing station"
-                    android:visibility="gone" />
+                    <CheckedTextView
+                        android:id="@+id/BathroomWheelchair"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:gravity="center_vertical"
+                        android:onClick="filterButtonClicked"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="• Wheelchair accessible"
+                        android:visibility="visible" />
 
-                <CheckedTextView
-                    android:id="@+id/GasStationGrocery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
-                    android:gravity="center_vertical"
-                    android:onClick="filterButtonClicked"
-                    android:paddingLeft="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="• Has grocery store"
-                    android:visibility="gone" />
+                    <CheckedTextView
+                        android:id="@+id/BathroomGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:gravity="center_vertical"
+                        android:onClick="filterButtonClicked"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="• All-gender bathroom"
+                        android:visibility="visible" />
+                </LinearLayout>
 
-                <CheckedTextView
-                    android:id="@+id/GasStationCarWash"
+                <LinearLayout
+                    android:id="@+id/GasStationFilters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
-                    android:gravity="center_vertical"
-                    android:onClick="filterButtonClicked"
-                    android:paddingLeft="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="• Has car wash"
-                    android:visibility="gone" />
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <CheckedTextView
+                        android:id="@+id/GasStationGrocery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:gravity="center_vertical"
+                        android:onClick="filterButtonClicked"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="• Has grocery store"
+                        android:visibility="visible" />
+
+                    <CheckedTextView
+                        android:id="@+id/GasStationCarWash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:gravity="center_vertical"
+                        android:onClick="filterButtonClicked"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="• Has car wash"
+                        android:visibility="visible" />
+                </LinearLayout>
 
                 <View
                     android:id="@+id/divider_2"
@@ -216,7 +235,8 @@
             android:id="@+id/FilterButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:animateLayoutChanges="true">
 
             <CheckedTextView
                 android:id="@+id/ExpandFilter"

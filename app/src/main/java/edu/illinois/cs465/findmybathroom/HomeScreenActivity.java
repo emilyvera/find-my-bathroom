@@ -34,30 +34,17 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         int new_view = (real_view.isChecked()) ? View.VISIBLE : View.GONE;
 
-        View[] bathroomFilters = {findViewById(R.id.BathroomGender), findViewById(R.id.BathroomWheelchair), findViewById(R.id.BathroomDiaper)};
-        View[] gasStationFilters = {findViewById(R.id.GasStationGrocery), findViewById(R.id.GasStationCarWash)};
+        View bathroomFilters = findViewById(R.id.BathroomFilters);
+        View gasStationFilters = findViewById(R.id.GasStationFilters);
 
-        View[] type_to_filter = v.getId() == R.id.BathroomType ? bathroomFilters : gasStationFilters;
+        View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : gasStationFilters;
 
-        for (View x : type_to_filter) {
-            x.setVisibility(new_view);
-        }
+        filters_to_change.setVisibility(new_view);
 
 
-
-        LinearLayout features = findViewById(R.id.FeaturesHolder);
-        boolean foundVisibleChild = false;
-        for (int i = 0; i < features.getChildCount(); i++) {
-            View child = features.getChildAt(i);
-            if (child instanceof CheckedTextView && child.getVisibility() == View.VISIBLE) {
-                foundVisibleChild = true;
-            }
-        }
-
-        features.setVisibility(foundVisibleChild ? View.VISIBLE : View.GONE);
-
-
-        findViewById(R.id.VerificationHolder).setVisibility( ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked() ? View.VISIBLE : View.GONE);
+        boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked();
+        findViewById(R.id.FeaturesHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
+        findViewById(R.id.VerificationHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
 
     }
 
