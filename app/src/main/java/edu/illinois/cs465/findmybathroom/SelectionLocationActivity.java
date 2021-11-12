@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,20 +15,26 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import edu.illinois.cs465.findmybathroom.databinding.ActivityHomeScreenBinding;
+import edu.illinois.cs465.findmybathroom.databinding.ActivitySelectionLocationBinding;
 
-public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCallback {
+public class SelectionLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityHomeScreenBinding binding;
-    private ImageButton btnAddBathroom;
+    private ActivitySelectionLocationBinding binding;
+
+    private Button btnYes;
+    private Button btnNo;
 
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.addButton:
+                case R.id.yesButton:
                     // doStuff
-                    startActivity(new Intent(HomeScreenActivity.this, AddBathroomActivity.class));
+                    startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
+                    break;
+                case R.id.noButton:
+                    // doStuff
+                    startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
             }
         }
@@ -37,7 +44,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityHomeScreenBinding.inflate(getLayoutInflater());
+        binding = ActivitySelectionLocationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -45,9 +52,11 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        btnYes = (Button) findViewById(R.id.yesButton);
+        btnYes.setOnClickListener(handler);
 
-        btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
-        btnAddBathroom.setOnClickListener(handler);
+        btnNo = (Button) findViewById(R.id.noButton);
+        btnNo.setOnClickListener(handler);
     }
 
     /**
@@ -65,7 +74,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
-        mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad"));
+        mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad").draggable(true));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
     }
 }
