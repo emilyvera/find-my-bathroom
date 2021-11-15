@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.illinois.cs465.findmybathroom.databinding.ActivitySelectionLocationBinding;
@@ -25,11 +25,24 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
     private Button btnYes;
     private Button btnNo;
 
+    Marker newBathroomMarker;
+    DatabaseHelper bathroomDb;
+
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
+            Bundle extras = getIntent().getExtras();
+            String location_type = extras.getString("location_type");
+            double latitude = newBathroomMarker.getPosition().latitude;
+            double longitude = newBathroomMarker.getPosition().longitude;
+            String building_name = extras.getString("building_name");
+            int is_all_gender = extras.getInt("is_all_gender");
+            int is_wheelchair_accessible = extras.getInt("is_wheelchair_accessible");
+            int has_diaper_station = extras.getInt("has_diaper_station");
+
             switch (v.getId()) {
                 case R.id.yesButton:
                     // doStuff
+                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station);
                     startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
                 case R.id.noButton:
@@ -37,6 +50,24 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
                     startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
             }
+        }
+    };
+
+    GoogleMap.OnMarkerDragListener dragListener = new GoogleMap.OnMarkerDragListener (){
+
+        @Override
+        public void onMarkerDragStart(Marker marker) {
+
+        }
+
+        @Override
+        public void onMarkerDrag(Marker marker) {
+
+        }
+
+        @Override
+        public void onMarkerDragEnd(Marker marker) {
+
         }
     };
 
@@ -57,6 +88,8 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
 
         btnNo = (Button) findViewById(R.id.noButton);
         btnNo.setOnClickListener(handler);
+
+        bathroomDb = new DatabaseHelper(this);
     }
 
     /**
@@ -71,10 +104,11 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerDragListener(dragListener);
 
         // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
-        mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad").draggable(true));
+        newBathroomMarker = mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad").draggable(true));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
     }
 }

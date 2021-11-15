@@ -2,13 +2,13 @@ package edu.illinois.cs465.findmybathroom;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +24,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private ActivityHomeScreenBinding binding;
     private ImageButton btnAddBathroom;
+    DatabaseHelper bathroomDb;
 
     // Filters start
 
@@ -86,6 +87,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        bathroomDb = new DatabaseHelper(this);
 
         btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
         btnAddBathroom.setOnClickListener(handler);
@@ -104,10 +106,24 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Place existing bathrooms on the map
+        Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data", null);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                @SuppressLint("Range") Double latitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
+                @SuppressLint("Range") Double longitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
+
+                LatLng location = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(location).title("Marker at "));
+
+                cursor.moveToNext();
+            }
+        }
+
         // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
-        mMap.addMarker(new MarkerOptions().position(quad).title("Marker on the quad"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
+
         findViewById(R.id.Filters).bringToFront();
     }
 }
