@@ -15,7 +15,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import edu.illinois.cs465.findmybathroom.databinding.ActivityHomeScreenBinding;
 
@@ -24,9 +27,36 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private ActivityHomeScreenBinding binding;
     private ImageButton btnAddBathroom;
+    ArrayList<Marker> AllMarkers = new ArrayList<Marker>();
     DatabaseHelper bathroomDb;
+    boolean MapReady = false;
 
     // Filters start
+
+    public boolean shouldShowBathroom(String type, String all_gender, String wheelchair, String diaper) {
+        boolean showBathroom = true;
+        if (type.equals("bathroom") && ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked()) {
+
+            if (((CheckedTextView) findViewById(R.id.BathroomGender)).isChecked() && all_gender.equals("0")) {
+                showBathroom = false;
+            }
+
+            if (((CheckedTextView) findViewById(R.id.BathroomWheelchair)).isChecked() && wheelchair.equals("0")) {
+                showBathroom = false;
+            }
+
+            if (((CheckedTextView) findViewById(R.id.BathroomDiaper)).isChecked() && diaper.equals("0")) {
+                showBathroom = false;
+            }
+
+        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
+            /*
+                Todo: Add bathroom filters
+             */
+        }
+
+        return showBathroom;
+    }
 
     public void typeButtonClicked(View v)
     {
@@ -46,17 +76,18 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked();
         findViewById(R.id.FeaturesHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
         findViewById(R.id.VerificationHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
-
+        updateMap();
     }
 
     public void filterButtonClicked(View v)
     {
         CheckedTextView real_view = (CheckedTextView) v;
         real_view.toggle();
+        updateMap();
     }
 
-    public void filterExpandClicked(View v)
-    {
+
+    public void filterExpandClicked(View v) {
         ((CheckedTextView) v).toggle();
         int new_view = (((CheckedTextView) v).isChecked()) ? View.VISIBLE : View.GONE;
         findViewById(R.id.FilterHolder).setVisibility(new_view);
@@ -74,6 +105,40 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             }
         }
     };
+
+
+    public void updateMap() {
+        if (MapReady) {
+            // Remove existing bathrooms from the map
+            for (Marker mLocationMarker : AllMarkers) {
+                mLocationMarker.remove();
+            }
+            AllMarkers.clear();
+
+            // Place existing bathrooms on the map
+            Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data", null);
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+
+                    @SuppressLint("Range") Double latitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
+                    @SuppressLint("Range") Double longitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
+                    @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex("LOCATION_TYPE"));
+                    @SuppressLint("Range") String all_gender = cursor.getString(cursor.getColumnIndex("IS_ALL_GENDER"));
+                    @SuppressLint("Range") String wheelchair = cursor.getString(cursor.getColumnIndex("IS_WHEELCHAIR_ACCESSIBLE"));
+                    @SuppressLint("Range") String diaper = cursor.getString(cursor.getColumnIndex("HAS_DIAPER_STATION"));
+
+                    if (shouldShowBathroom(type, all_gender, wheelchair, diaper)) {
+                        LatLng location = new LatLng(latitude, longitude);
+
+                        Marker bathroomMarker = mMap.addMarker(new MarkerOptions().position(location).title("Marker at "));
+                        AllMarkers.add(bathroomMarker);
+                    }
+
+                    cursor.moveToNext();
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,20 +170,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Place existing bathrooms on the map
-        Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data", null);
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                @SuppressLint("Range") Double latitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
-                @SuppressLint("Range") Double longitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
-
-                LatLng location = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(location).title("Marker at "));
-
-                cursor.moveToNext();
-            }
-        }
+        MapReady = true;
+        updateMap();
 
         // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
