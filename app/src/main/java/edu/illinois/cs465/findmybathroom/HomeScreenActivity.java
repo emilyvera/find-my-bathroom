@@ -6,14 +6,19 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,6 +35,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     ArrayList<Marker> AllMarkers = new ArrayList<Marker>();
     DatabaseHelper bathroomDb;
     boolean MapReady = false;
+    TextView bathroomText;
+    LinearLayout detailsCard;
+    Button reviewButton;
 
     // Filters start
 
@@ -102,10 +110,13 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     // doStuff
                     startActivity(new Intent(HomeScreenActivity.this, AddBathroomActivity.class));
                     break;
+                case R.id.reviewButton:
+                    // doStuff
+                    startActivity(new Intent(HomeScreenActivity.this, ReviewActivity.class));
+                    break;
             }
         }
     };
-
 
     public void updateMap() {
         if (MapReady) {
@@ -130,7 +141,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     if (shouldShowBathroom(type, all_gender, wheelchair, diaper)) {
                         LatLng location = new LatLng(latitude, longitude);
 
-                        Marker bathroomMarker = mMap.addMarker(new MarkerOptions().position(location).title("Marker at "));
+                        Marker bathroomMarker = mMap.addMarker(new MarkerOptions().position(location));
                         AllMarkers.add(bathroomMarker);
                     }
 
@@ -156,6 +167,13 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
         btnAddBathroom.setOnClickListener(handler);
+
+        bathroomText = (TextView) findViewById(R.id.bathroom_name_text);
+
+        detailsCard = (LinearLayout) findViewById(R.id.details_card);
+
+        reviewButton = (Button) findViewById(R.id.reviewButton);
+        reviewButton.setOnClickListener(handler);
     }
 
     /**
@@ -170,11 +188,37 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                int bathroomId = Integer.parseInt(marker.getId().substring(1, marker.getId().length())) + 1;
+                Log.v("bathroom id", String.valueOf(bathroomId));
+                Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data where ID=" + bathroomId, null);
+
+                if (cursor.moveToFirst()) {
+                    @SuppressLint("Range") String bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
+                    bathroomText.setText(bathroomName);
+                    detailsCard.setVisibility(View.VISIBLE);
+                }
+                cursor.close();
+                return false;
+            }
+        });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng arg0) {
+                detailsCard.setVisibility(View.GONE);
+            }
+        });
+
         MapReady = true;
         updateMap();
 
         // Replace with user's current location later
         LatLng quad = new LatLng(40.107519, -88.22722);
+        mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
 
         findViewById(R.id.Filters).bringToFront();
