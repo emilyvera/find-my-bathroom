@@ -112,7 +112,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     break;
                 case R.id.reviewButton:
                     // doStuff
-                    startActivity(new Intent(HomeScreenActivity.this, ReviewActivity.class));
+                    startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
                     break;
             }
         }
@@ -233,7 +233,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                startActivity(new Intent(HomeScreenActivity.this, AddBathroomActivity.class));
+                startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
             }
         });
 

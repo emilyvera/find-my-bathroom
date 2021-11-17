@@ -21,7 +21,9 @@
         <entry key="..\:/Users/ethan/Documents/CS 465/Find_My_Bathroom/app/src/main/res/layout/activity_main2.xml" value="0.15830800405268491" />
         <entry key="app/src/main/res/layout/activity_add_bathroom.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/activity_review.xml" value="0.25" />
         <entry key="app/src/main/res/layout/review.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/review_info_window.xml" value="0.134375" />
       </map>
     </option>
   </component>

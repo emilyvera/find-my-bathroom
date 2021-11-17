@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FindMyBathroom">
         <activity
-            android:name=".ReviewActivity"
+            android:name=".AddReviewActivity"
             android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
