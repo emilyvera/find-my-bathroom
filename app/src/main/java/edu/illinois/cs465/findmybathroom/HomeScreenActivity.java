@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import edu.illinois.cs465.findmybathroom.databinding.ActivityHomeScreenBinding;
 
@@ -187,6 +186,13 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 return false;
             }
         });
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                startActivity(new Intent(HomeScreenActivity.this, AddBathroomActivity.class));
+            }
+        });
+
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -201,11 +207,14 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             public View getInfoContents(Marker marker) {
 
                 // Getting view from the layout file infowindowlayout.xml
-                View v = getLayoutInflater().inflate(R.layout.review, null);
+                View v = getLayoutInflater().inflate(R.layout.review_info_window, null);
                 return v;
             }
+
+
         });
     }
+
 
 
 
