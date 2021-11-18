@@ -76,14 +76,17 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
             /*
-                Todo: Add bathroom filters
+                Bathroom filters removed
              */
+        } else {
+            showBathroom = false;
         }
 
         return showBathroom;
     }
 
     public void typeButtonClicked(View v) {
+        // No longer used since gas station was removed
         CheckedTextView real_view = (CheckedTextView) v;
         real_view.toggle();
 
@@ -109,11 +112,15 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         updateMap();
     }
 
-
-    public void filterExpandClicked(View v) {
+    public void expandFilter() {
+        View v = findViewById(R.id.ExpandFilter);
         ((CheckedTextView) v).toggle();
         int new_view = (((CheckedTextView) v).isChecked()) ? View.VISIBLE : View.GONE;
         findViewById(R.id.FilterHolder).setVisibility(new_view);
+    }
+
+    public void filterExpandClicked(View v) {
+        expandFilter();
     }
 
     // Filters end
@@ -128,6 +135,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 case R.id.reviewButton:
                     // doStuff
                     startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
+                    break;
+                case R.id.searchButton:
+                    expandFilter();
                     break;
             }
         }
@@ -212,6 +222,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         reviewButton = (Button) findViewById(R.id.reviewButton);
         reviewButton.setOnClickListener(handler);
+
+        findViewById(R.id.searchButton).setOnClickListener(handler);
 
     }
 
