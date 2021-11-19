@@ -53,34 +53,12 @@
                 android:textColor="@color/black"
                 android:textSize="16dp" />
 
-            <TextView
-                android:id="@+id/text_gas_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/checkbox_gas_station"
-                android:layout_below="@id/text_bathroom"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="4dp"
-                android:textSize="16dp"
-                android:textColor="@color/black"
-                android:text="Gas station"/>
-
             <CheckBox android:id="@+id/checkbox_bathroom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="top"
-                android:layout_toRightOf="@id/text_bathroom"
-                android:layout_alignLeft="@id/checkbox_gas_station"/>
+                android:layout_toRightOf="@id/text_bathroom"/>
 
-            <CheckBox
-                android:id="@+id/checkbox_gas_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/checkbox_bathroom"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="1dp"
-                android:layout_toRightOf="@id/text_gas_station"
-                android:gravity="top|right" />
         </RelativeLayout>
 
         <TextView

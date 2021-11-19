@@ -14,7 +14,7 @@ public class AddBathroomActivity extends AppCompatActivity {
     private Button btnNext;
 
     private CheckBox is_bathroom;
-    private CheckBox is_gas_station;
+//    private CheckBox is_gas_station;
     private EditText building_name;
     private CheckBox is_all_gender;
     private CheckBox is_wheelchair_accessible;
@@ -47,7 +47,6 @@ public class AddBathroomActivity extends AppCompatActivity {
         btnNext.setOnClickListener(handler);
 
         is_bathroom = (CheckBox) findViewById(R.id.checkbox_bathroom);
-        is_gas_station = (CheckBox) findViewById(R.id.checkbox_gas_station);
         building_name = (EditText) findViewById(R.id.editTextBuildingName);
         is_all_gender = (CheckBox) findViewById(R.id.checkbox_all_gender);
         is_wheelchair_accessible = (CheckBox) findViewById(R.id.checkbox_wheelchair_accessible);

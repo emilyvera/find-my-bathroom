@@ -74,10 +74,10 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 showBathroom = false;
             }
 
-        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
-            /*
-                Bathroom filters removed
-             */
+//        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
+//            /*
+//                Bathroom filters removed
+//             */
         } else {
             showBathroom = false;
         }
@@ -93,14 +93,14 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         int new_view = (real_view.isChecked()) ? View.VISIBLE : View.GONE;
 
         View bathroomFilters = findViewById(R.id.BathroomFilters);
-        View gasStationFilters = findViewById(R.id.GasStationFilters);
+//        View gasStationFilters = findViewById(R.id.GasStationFilters);
 
-        View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : gasStationFilters;
+        View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : null;
 
         filters_to_change.setVisibility(new_view);
 
 
-        boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked();
+        boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked();
         findViewById(R.id.FeaturesHolder).setVisibility(show_options ? View.VISIBLE : View.GONE);
         findViewById(R.id.VerificationHolder).setVisibility(show_options ? View.VISIBLE : View.GONE);
         updateMap();
@@ -236,6 +236,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -246,9 +247,14 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 // Got last known location. In some rare situations this can be null.
                 if (location != null) {
                     Log.d("myTag", "Location set");
-                    LatLng currLatLong = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(currLatLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLong, 17));
+
+//                    Adding bathroom is centered around the quad location and emulator doesn't grab location data properly
+//                     - replaceing with hardcoded lat/long
+//                    LatLng currLatLong = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    LatLng quad = new LatLng(40.107519, -88.22722);
+                    mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
                 }
             }
         });
