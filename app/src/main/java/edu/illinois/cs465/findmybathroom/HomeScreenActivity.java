@@ -286,46 +286,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         MapReady = true;
         updateMap();
 
-
         findViewById(R.id.Filters).bringToFront();
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                marker.showInfoWindow();
-                return false;
-            }
-        });
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
-            }
-        });
-
-
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            // Use default InfoWindow frame
-            @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            // Defines the contents of the InfoWindow
-            @Override
-            public View getInfoContents(Marker marker) {
-
-                // Getting view from the layout file infowindowlayout.xml
-                View v = getLayoutInflater().inflate(R.layout.review_info_window, null);
-                return v;
-            }
-
-
-        });
     }
-
-
-
-
 }
