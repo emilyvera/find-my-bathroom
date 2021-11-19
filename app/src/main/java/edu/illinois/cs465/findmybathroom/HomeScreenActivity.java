@@ -1,10 +1,17 @@
 package edu.illinois.cs465.findmybathroom;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +32,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.ArrayList;
 
 import edu.illinois.cs465.findmybathroom.databinding.ActivityHomeScreenBinding;
@@ -31,6 +45,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private ActivityHomeScreenBinding binding;
+    private FusedLocationProviderClient fusedLocationClient;
+
+
     private ImageButton btnAddBathroom;
     ArrayList<Marker> AllMarkers = new ArrayList<Marker>();
     DatabaseHelper bathroomDb;
@@ -57,53 +74,58 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 showBathroom = false;
             }
 
-        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
-            /*
-                Todo: Add bathroom filters
-             */
+//        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
+//            /*
+//                Bathroom filters removed
+//             */
+        } else {
+            showBathroom = false;
         }
 
         return showBathroom;
     }
 
-    public void typeButtonClicked(View v)
-    {
+    public void typeButtonClicked(View v) {
+        // No longer used since gas station was removed
         CheckedTextView real_view = (CheckedTextView) v;
         real_view.toggle();
 
         int new_view = (real_view.isChecked()) ? View.VISIBLE : View.GONE;
 
         View bathroomFilters = findViewById(R.id.BathroomFilters);
-        View gasStationFilters = findViewById(R.id.GasStationFilters);
+//        View gasStationFilters = findViewById(R.id.GasStationFilters);
 
-        View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : gasStationFilters;
+        View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : null;
 
         filters_to_change.setVisibility(new_view);
 
 
-        boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked() || ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked();
-        findViewById(R.id.FeaturesHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
-        findViewById(R.id.VerificationHolder).setVisibility( show_options ? View.VISIBLE : View.GONE);
+        boolean show_options = ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked();
+        findViewById(R.id.FeaturesHolder).setVisibility(show_options ? View.VISIBLE : View.GONE);
+        findViewById(R.id.VerificationHolder).setVisibility(show_options ? View.VISIBLE : View.GONE);
         updateMap();
     }
 
-    public void filterButtonClicked(View v)
-    {
+    public void filterButtonClicked(View v) {
         CheckedTextView real_view = (CheckedTextView) v;
         real_view.toggle();
         updateMap();
     }
 
-
-    public void filterExpandClicked(View v) {
+    public void expandFilter() {
+        View v = findViewById(R.id.ExpandFilter);
         ((CheckedTextView) v).toggle();
         int new_view = (((CheckedTextView) v).isChecked()) ? View.VISIBLE : View.GONE;
         findViewById(R.id.FilterHolder).setVisibility(new_view);
     }
 
+    public void filterExpandClicked(View v) {
+        expandFilter();
+    }
+
     // Filters end
 
-    View.OnClickListener handler = new View.OnClickListener(){
+    View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.addButton:
@@ -112,7 +134,10 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     break;
                 case R.id.reviewButton:
                     // doStuff
-                    startActivity(new Intent(HomeScreenActivity.this, ReviewActivity.class));
+                    startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
+                    break;
+                case R.id.searchButton:
+                    expandFilter();
                     break;
             }
         }
@@ -151,6 +176,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,10 +184,32 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         binding = ActivityHomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        LocationRequest mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(60000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationCallback mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+            }
+        };
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        int locationRequestCode = 1000;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},locationRequestCode);
+            Log.d("myTag", "No Permission");
+        }
 
         bathroomDb = new DatabaseHelper(this);
 
@@ -174,6 +222,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         reviewButton = (Button) findViewById(R.id.reviewButton);
         reviewButton.setOnClickListener(handler);
+
+        findViewById(R.id.searchButton).setOnClickListener(handler);
+
     }
 
     /**
@@ -185,9 +236,28 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    Log.d("myTag", "Location set");
+
+//                    Adding bathroom is centered around the quad location and emulator doesn't grab location data properly
+//                     - replaceing with hardcoded lat/long
+//                    LatLng currLatLong = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    LatLng quad = new LatLng(40.107519, -88.22722);
+                    mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
+                }
+            }
+        });
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -216,11 +286,46 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         MapReady = true;
         updateMap();
 
-        // Replace with user's current location later
-        LatLng quad = new LatLng(40.107519, -88.22722);
-        mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
 
         findViewById(R.id.Filters).bringToFront();
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return false;
+            }
+        });
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
+            }
+        });
+
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                // Getting view from the layout file infowindowlayout.xml
+                View v = getLayoutInflater().inflate(R.layout.review_info_window, null);
+                return v;
+            }
+
+
+        });
     }
+
+
+
+
 }
