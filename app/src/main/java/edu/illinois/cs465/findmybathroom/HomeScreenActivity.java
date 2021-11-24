@@ -55,6 +55,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     TextView bathroomText;
     LinearLayout detailsCard;
     Button reviewButton;
+    String bathroomName;
 
     // Filters start
 
@@ -134,7 +135,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     break;
                 case R.id.reviewButton:
                     // doStuff
-                    startActivity(new Intent(HomeScreenActivity.this, AddReviewActivity.class));
+                    Intent i = new Intent(HomeScreenActivity.this, AddReviewActivity.class);
+                    i.putExtra("bathroom_name", bathroomName);
+                    startActivity(i);
                     break;
                 case R.id.searchButton:
                     expandFilter();
@@ -260,6 +263,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         });
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @SuppressLint("Range")
             @Override
             public boolean onMarkerClick(Marker marker) {
                 int bathroomId = Integer.parseInt(marker.getId().substring(1, marker.getId().length())) + 1;
@@ -267,7 +271,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data where ID=" + bathroomId, null);
 
                 if (cursor.moveToFirst()) {
-                    @SuppressLint("Range") String bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
+                    bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
                     bathroomText.setText(bathroomName);
                     detailsCard.setVisibility(View.VISIBLE);
                 }
