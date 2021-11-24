@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationCallback;
@@ -55,6 +56,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     LinearLayout detailsCard;
     Button reviewButton;
     String bathroomName;
+    RatingBar ratingBar;
+    int bathroomId;
 
     // Filters start
 
@@ -130,6 +133,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     // doStuff
                     Intent i = new Intent(HomeScreenActivity.this, AddReviewActivity.class);
                     i.putExtra("bathroom_name", bathroomName);
+                    i.putExtra("id", bathroomId);
                     startActivity(i);
                     break;
                 case R.id.searchButton:
@@ -223,6 +227,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         findViewById(R.id.searchButton).setOnClickListener(handler);
 
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
     }
 
     /**
@@ -262,12 +267,15 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             @SuppressLint("Range")
             @Override
             public boolean onMarkerClick(Marker marker) {
-                int bathroomId = (int) marker.getTag();
+                bathroomId = (int) marker.getTag();
                 Log.v("bathroom id", String.valueOf(bathroomId));
                 Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data where ID=" + bathroomId, null);
 
                 if (cursor.moveToFirst()) {
                     bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
+                    float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
+                    Log.v("homescreen rating", String.valueOf(rating));
+                    ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
                     detailsCard.setVisibility(View.VISIBLE);
                 }
