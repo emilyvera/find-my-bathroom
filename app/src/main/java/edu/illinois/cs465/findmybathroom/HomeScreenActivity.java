@@ -47,7 +47,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     private ActivityHomeScreenBinding binding;
     private FusedLocationProviderClient fusedLocationClient;
 
-
     private ImageButton btnAddBathroom;
     ArrayList<Marker> AllMarkers = new ArrayList<Marker>();
     DatabaseHelper bathroomDb;
@@ -74,11 +73,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             if (((CheckedTextView) findViewById(R.id.BathroomDiaper)).isChecked() && diaper.equals("0")) {
                 showBathroom = false;
             }
-
-//        } else if (type.equals("gas station") && ((CheckedTextView) findViewById(R.id.gasStationType)).isChecked()) {
-//            /*
-//                Bathroom filters removed
-//             */
         } else {
             showBathroom = false;
         }
@@ -94,7 +88,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         int new_view = (real_view.isChecked()) ? View.VISIBLE : View.GONE;
 
         View bathroomFilters = findViewById(R.id.BathroomFilters);
-//        View gasStationFilters = findViewById(R.id.GasStationFilters);
 
         View filters_to_change = v.getId() == R.id.BathroomType ? bathroomFilters : null;
 
@@ -159,6 +152,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
 
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("ID"));
                     @SuppressLint("Range") Double latitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
                     @SuppressLint("Range") Double longitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
                     @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex("LOCATION_TYPE"));
@@ -170,6 +164,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                         LatLng location = new LatLng(latitude, longitude);
 
                         Marker bathroomMarker = mMap.addMarker(new MarkerOptions().position(location));
+                        bathroomMarker.setTag(id);
                         AllMarkers.add(bathroomMarker);
                     }
 
@@ -256,7 +251,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 //                    LatLng currLatLong = new LatLng(location.getLatitude(), location.getLongitude());
 
                     LatLng quad = new LatLng(40.107519, -88.22722);
-                    mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    Marker currentLocation = mMap.addMarker(new MarkerOptions().position(quad).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    currentLocation.setTag(-1);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(quad, 17));
                 }
             }
@@ -266,7 +262,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
             @SuppressLint("Range")
             @Override
             public boolean onMarkerClick(Marker marker) {
-                int bathroomId = Integer.parseInt(marker.getId().substring(1, marker.getId().length())) + 1;
+                int bathroomId = (int) marker.getTag();
                 Log.v("bathroom id", String.valueOf(bathroomId));
                 Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data where ID=" + bathroomId, null);
 
