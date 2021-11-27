@@ -48,7 +48,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     private ActivityHomeScreenBinding binding;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private ImageButton btnAddBathroom;
+    private Button btnAddBathroom;
     ArrayList<Marker> AllMarkers = new ArrayList<Marker>();
     DatabaseHelper bathroomDb;
     boolean MapReady = false;
@@ -136,9 +136,9 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     i.putExtra("id", bathroomId);
                     startActivity(i);
                     break;
-                case R.id.searchButton:
-                    expandFilter();
-                    break;
+//                case R.id.searchButton:
+//                    expandFilter();
+//                    break;
             }
         }
     };
@@ -215,7 +215,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         bathroomDb = new DatabaseHelper(this);
 
-        btnAddBathroom = (ImageButton) findViewById(R.id.addButton);
+        btnAddBathroom = (Button) findViewById(R.id.addButton);
         btnAddBathroom.setOnClickListener(handler);
 
         bathroomText = (TextView) findViewById(R.id.bathroom_name_text);
@@ -225,7 +225,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         reviewButton = (Button) findViewById(R.id.reviewButton);
         reviewButton.setOnClickListener(handler);
 
-        findViewById(R.id.searchButton).setOnClickListener(handler);
+//        findViewById(R.id.searchButton).setOnClickListener(handler);
 
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
     }
