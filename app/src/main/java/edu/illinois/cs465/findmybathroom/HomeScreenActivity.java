@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     String bathroomName;
     RatingBar ratingBar;
     int bathroomId;
+    ImageView verifiedCheck;
 
     // Filters start
 
@@ -228,6 +230,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 //        findViewById(R.id.searchButton).setOnClickListener(handler);
 
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        verifiedCheck = (ImageView) findViewById(R.id.verified_bathroom_check);
     }
 
     /**
@@ -274,9 +278,16 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 if (cursor.moveToFirst()) {
                     bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
                     float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
+                    int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
+
+                    if (isCommunityVerified == 0) {
+                        verifiedCheck.setVisibility(View.INVISIBLE);
+                    } else {
+                        verifiedCheck.setVisibility(View.VISIBLE);
+                    }
                     detailsCard.setVisibility(View.VISIBLE);
                 }
                 cursor.close();

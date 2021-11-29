@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ public class AddReviewActivity extends FragmentActivity {
     TextView bathroomNameText;
     DatabaseHelper bathroomDb;
     RatingBar ratingBar;
+    ImageView verifiedCheck;
 
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
@@ -56,5 +59,19 @@ public class AddReviewActivity extends FragmentActivity {
         bathroomNameText.setText(bathroomName);
 
         ratingBar = (RatingBar) findViewById(R.id.simpleRatingBar);
+
+        verifiedCheck = (ImageView) findViewById(R.id.verified_check);
+        int id = extras.getInt("id");
+        Cursor cursor = bathroomDb.getReadableDatabase().rawQuery("select * from bathroom_data where ID=" + id, null);
+
+        if (cursor.moveToFirst()) {
+            @SuppressLint("Range") int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
+            if (isCommunityVerified == 0) {
+                verifiedCheck.setVisibility(View.INVISIBLE);
+            } else {
+                verifiedCheck.setVisibility(View.VISIBLE);
+            }
+        }
+        cursor.close();
     }
 }

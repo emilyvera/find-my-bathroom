@@ -23,7 +23,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_7 = "IS_WHEELCHAIR_ACCESSIBLE";
     public static final String COL_8 = "HAS_DIAPER_STATION";
     public static final String COL_9 = "RATING";
-    public static final String COL_10 = "TOTAL_VOTES";
+    public static final String COL_10 = "SUM_RATINGS";
+    public static final String COL_11 = "TOTAL_VOTES";
+    public static final String COL_12 = "IS_COMMUNITY_VERIFIED";
 
     // possible extra fields
     public static final String is_free = "bathroom_data.db";
@@ -46,7 +48,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "IS_WHEELCHAIR_ACCESSIBLE INTEGER," +
                 "HAS_DIAPER_STATION INTEGER," +
                 "RATING REAL," +
-                "TOTAL_VOTES INTEGER)");
+                "SUM_RATINGS REAL," +
+                "TOTAL_VOTES INTEGER," +
+                "IS_COMMUNITY_VERIFIED INTEGER)");
     }
 
     @Override
@@ -68,8 +72,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_6, is_all_gender);
         contentValues.put(COL_7, is_wheelchair_accessible);
         contentValues.put(COL_8, has_diaper_stations);
-        contentValues.put(COL_9, 0);
-        contentValues.put(COL_10, 0);
+        contentValues.put(COL_9, 0); // default rating is 0
+        contentValues.put(COL_10, 0); // default sum of ratings is 0
+        contentValues.put(COL_11, 0); // default total votes is 0
+        contentValues.put(COL_12, 0); // default not community verified
 
         long result = db.insert(TABLE_NAME, null, contentValues);
 
@@ -84,20 +90,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM bathroom_data WHERE ID=" + id, null);
-        float oldRating = 0;
+        float sumRatings = 0;
         int totalVotes = 0;
+        int isCommunityVerified = 0;
         if (cursor.moveToFirst()) {
-            oldRating = cursor.getFloat(cursor.getColumnIndex("RATING"));
+            sumRatings = cursor.getInt(cursor.getColumnIndex("SUM_RATINGS"));
             totalVotes = cursor.getInt(cursor.getColumnIndex("TOTAL_VOTES"));
+            isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
         }
         cursor.close();
 
         int updatedTotalVotes = totalVotes + 1;
-        float updatedRating = (oldRating + newRating) / updatedTotalVotes;
-        Log.v("updatedaTotalVotes", String.valueOf(updatedTotalVotes));
+        float updatedSumRatings = sumRatings + newRating;
+        float updatedRating = updatedSumRatings / updatedTotalVotes;
+        Log.v("updatedTotalVotes", String.valueOf(updatedTotalVotes));
         Log.v("updatedRating", String.valueOf(updatedRating));
         Log.v("id is", String.valueOf(id));
         db.execSQL("UPDATE bathroom_data SET RATING=" + updatedRating + " WHERE ID=" + id);
+        db.execSQL("UPDATE bathroom_data SET SUM_RATINGS=" + updatedSumRatings + " WHERE ID=" + id);
         db.execSQL("UPDATE bathroom_data SET TOTAL_VOTES=" + updatedTotalVotes + " WHERE ID=" + id);
+
+        if (updatedRating >= 3.5 && updatedTotalVotes >= 50 && isCommunityVerified == 0) {
+            db.execSQL("UPDATE bathroom_data SET IS_COMMUNITY_VERIFIED=1 WHERE ID=" + id);
+            Log.v("updated verification", "yes");
+        }
     }
 }

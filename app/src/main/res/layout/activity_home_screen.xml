@@ -322,6 +322,7 @@
                 android:text="Bathroom Name"/>
 
             <ImageView
+                android:id="@+id/verified_bathroom_check"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/verified_check"
@@ -347,7 +348,8 @@
             android:progressTint="#ffd32c"
             android:secondaryProgressTint="#fbf2b2"
             android:progressBackgroundTint="#dbdbdb"
-            android:rating="3.5"/>
+            android:isIndicator="true"
+            android:stepSize="0.1"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -23,6 +23,7 @@
             android:text="Bathroom Name"/>
 
         <ImageView
+            android:id="@+id/verified_check"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/verified_check"
