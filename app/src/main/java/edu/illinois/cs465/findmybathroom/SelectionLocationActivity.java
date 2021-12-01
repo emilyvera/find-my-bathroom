@@ -38,11 +38,12 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
             int is_all_gender = extras.getInt("is_all_gender");
             int is_wheelchair_accessible = extras.getInt("is_wheelchair_accessible");
             int has_diaper_station = extras.getInt("has_diaper_station");
+            String location_description = extras.getString("location_description");
 
             switch (v.getId()) {
                 case R.id.yesButton:
                     // doStuff
-                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station);
+                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description);
                     startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
                 case R.id.noButton:

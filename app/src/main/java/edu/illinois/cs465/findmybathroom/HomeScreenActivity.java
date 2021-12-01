@@ -60,6 +60,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     RatingBar ratingBar;
     int bathroomId;
     ImageView verifiedCheck;
+    TextView locationDescription;
 
     // Filters start
 
@@ -232,6 +233,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         verifiedCheck = (ImageView) findViewById(R.id.verified_bathroom_check);
+
+        locationDescription = (TextView) findViewById(R.id.locationDescriptionText);
     }
 
     /**
@@ -279,9 +282,11 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
                     float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
                     int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
+                    String description = cursor.getString(cursor.getColumnIndex("LOCATION_DESCRIPTION"));
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
+                    locationDescription.setText("• " + description);
 
                     if (isCommunityVerified == 0) {
                         verifiedCheck.setVisibility(View.INVISIBLE);

@@ -22,10 +22,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_6 = "IS_ALL_GENDER";
     public static final String COL_7 = "IS_WHEELCHAIR_ACCESSIBLE";
     public static final String COL_8 = "HAS_DIAPER_STATION";
-    public static final String COL_9 = "RATING";
-    public static final String COL_10 = "SUM_RATINGS";
-    public static final String COL_11 = "TOTAL_VOTES";
-    public static final String COL_12 = "IS_COMMUNITY_VERIFIED";
+    public static final String COL_9 = "LOCATION_DESCRIPTION";
+    public static final String COL_10 = "RATING";
+    public static final String COL_11 = "SUM_RATINGS";
+    public static final String COL_12 = "TOTAL_VOTES";
+    public static final String COL_13 = "IS_COMMUNITY_VERIFIED";
 
     // possible extra fields
     public static final String is_free = "bathroom_data.db";
@@ -47,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "IS_ALL_GENDER INTEGER," +
                 "IS_WHEELCHAIR_ACCESSIBLE INTEGER," +
                 "HAS_DIAPER_STATION INTEGER," +
+                "LOCATION_DESCRIPTION TEXT," +
                 "RATING REAL," +
                 "SUM_RATINGS REAL," +
                 "TOTAL_VOTES INTEGER," +
@@ -61,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean insertData(String location_type, Double latitude, Double longitude,
                               String building_name, int is_all_gender, int is_wheelchair_accessible,
-                              int has_diaper_stations) {
+                              int has_diaper_stations, String location_description) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -72,10 +74,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_6, is_all_gender);
         contentValues.put(COL_7, is_wheelchair_accessible);
         contentValues.put(COL_8, has_diaper_stations);
-        contentValues.put(COL_9, 0); // default rating is 0
-        contentValues.put(COL_10, 0); // default sum of ratings is 0
-        contentValues.put(COL_11, 0); // default total votes is 0
-        contentValues.put(COL_12, 0); // default not community verified
+        contentValues.put(COL_9, location_description);
+        contentValues.put(COL_10, 0); // default rating is 0
+        contentValues.put(COL_11, 0); // default sum of ratings is 0
+        contentValues.put(COL_12, 0); // default total votes is 0
+        contentValues.put(COL_13, 0); // default not community verified
 
         long result = db.insert(TABLE_NAME, null, contentValues);
 
