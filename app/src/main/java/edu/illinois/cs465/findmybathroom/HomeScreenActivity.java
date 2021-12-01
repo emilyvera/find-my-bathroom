@@ -64,19 +64,23 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
     // Filters start
 
-    public boolean shouldShowBathroom(String type, String all_gender, String wheelchair, String diaper) {
+    public boolean shouldShowBathroom(String type, int all_gender, int wheelchair, int diaper, int verified) {
         boolean showBathroom = true;
         if (type.equals("bathroom") && ((CheckedTextView) findViewById(R.id.BathroomType)).isChecked()) {
 
-            if (((CheckedTextView) findViewById(R.id.BathroomGender)).isChecked() && all_gender.equals("0")) {
+            if (((CheckedTextView) findViewById(R.id.BathroomGender)).isChecked() && all_gender == 0) {
                 showBathroom = false;
             }
 
-            if (((CheckedTextView) findViewById(R.id.BathroomWheelchair)).isChecked() && wheelchair.equals("0")) {
+            if (((CheckedTextView) findViewById(R.id.BathroomWheelchair)).isChecked() && wheelchair == 0) {
                 showBathroom = false;
             }
 
-            if (((CheckedTextView) findViewById(R.id.BathroomDiaper)).isChecked() && diaper.equals("0")) {
+            if (((CheckedTextView) findViewById(R.id.BathroomDiaper)).isChecked() && diaper == 0) {
+                showBathroom = false;
+            }
+
+            if (((CheckedTextView) findViewById(R.id.VerifiedChecked)).isChecked() && verified == 0) {
                 showBathroom = false;
             }
         } else {
@@ -163,11 +167,12 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     @SuppressLint("Range") Double latitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
                     @SuppressLint("Range") Double longitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
                     @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex("LOCATION_TYPE"));
-                    @SuppressLint("Range") String all_gender = cursor.getString(cursor.getColumnIndex("IS_ALL_GENDER"));
-                    @SuppressLint("Range") String wheelchair = cursor.getString(cursor.getColumnIndex("IS_WHEELCHAIR_ACCESSIBLE"));
-                    @SuppressLint("Range") String diaper = cursor.getString(cursor.getColumnIndex("HAS_DIAPER_STATION"));
+                    @SuppressLint("Range") int all_gender = cursor.getInt(cursor.getColumnIndex("IS_ALL_GENDER"));
+                    @SuppressLint("Range") int wheelchair = cursor.getInt(cursor.getColumnIndex("IS_WHEELCHAIR_ACCESSIBLE"));
+                    @SuppressLint("Range") int diaper = cursor.getInt(cursor.getColumnIndex("HAS_DIAPER_STATION"));
+                    @SuppressLint("Range") int verified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
 
-                    if (shouldShowBathroom(type, all_gender, wheelchair, diaper)) {
+                    if (shouldShowBathroom(type, all_gender, wheelchair, diaper, verified)) {
                         LatLng location = new LatLng(latitude, longitude);
 
                         Marker bathroomMarker = mMap.addMarker(new MarkerOptions().position(location));
@@ -281,8 +286,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                 if (cursor.moveToFirst()) {
                     bathroomName = cursor.getString(cursor.getColumnIndex("BUILDING_NAME"));
                     float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
-                    int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
                     String description = cursor.getString(cursor.getColumnIndex("LOCATION_DESCRIPTION"));
+                    int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
