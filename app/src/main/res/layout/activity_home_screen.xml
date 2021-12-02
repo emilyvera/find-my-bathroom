@@ -391,6 +391,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/checkbox_1"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginRight="5dp"
@@ -398,6 +399,7 @@
                         android:src="@drawable/checkmark"/>
 
                     <TextView
+                        android:id="@+id/amenity_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -414,6 +416,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/checkbox_2"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginRight="5dp"
@@ -421,6 +424,7 @@
                         android:src="@drawable/checkmark"/>
 
                     <TextView
+                        android:id="@+id/amenity_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"

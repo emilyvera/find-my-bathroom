@@ -54,6 +54,10 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     DatabaseHelper bathroomDb;
     boolean MapReady = false;
     TextView bathroomText;
+    TextView amenity1;
+    TextView amenity2;
+    ImageView checkbox1;
+    ImageView checkbox2;
     LinearLayout detailsCard;
     Button reviewButton;
     String bathroomName;
@@ -228,6 +232,11 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
 
         bathroomText = (TextView) findViewById(R.id.bathroom_name_text);
 
+        amenity1 = (TextView) findViewById(R.id.amenity_1);
+        amenity2 = (TextView) findViewById(R.id.amenity_2);
+        checkbox1 = (ImageView) findViewById(R.id.checkbox_1);
+        checkbox2 = (ImageView) findViewById(R.id.checkbox_2);
+
         detailsCard = (LinearLayout) findViewById(R.id.details_card);
 
         reviewButton = (Button) findViewById(R.id.reviewButton);
@@ -288,6 +297,10 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
                     String description = cursor.getString(cursor.getColumnIndex("LOCATION_DESCRIPTION"));
                     int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
+
+                    int all_gender = cursor.getInt(cursor.getColumnIndex("IS_ALL_GENDER"));
+                    int wheelchair = cursor.getInt(cursor.getColumnIndex("IS_WHEELCHAIR_ACCESSIBLE"));
+                    int diaper = cursor.getInt(cursor.getColumnIndex("HAS_DIAPER_STATION"));
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
@@ -299,6 +312,62 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                         verifiedCheck.setVisibility(View.VISIBLE);
                     }
                     detailsCard.setVisibility(View.VISIBLE);
+
+                    // Set amenities
+                    if (wheelchair == 1 && all_gender == 1) {
+                        amenity1.setText("Wheelchair accessible");
+                        amenity2.setText("All-gender");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.VISIBLE);
+                        checkbox2.setVisibility(View.VISIBLE);
+                    } else if (wheelchair == 1 && diaper == 1) {
+                        amenity1.setText("All-gender");
+                        amenity2.setText("Diaper changing station");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.VISIBLE);
+                        checkbox2.setVisibility(View.VISIBLE);
+                    } else if (wheelchair == 1 && diaper == 1) {
+                        amenity1.setText("Wheelchair accessible");
+                        amenity2.setText("Diaper changing station");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.VISIBLE);
+                        checkbox2.setVisibility(View.VISIBLE);
+                    } else if (wheelchair == 1) {
+                        amenity1.setText("Wheelchair accessible");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.GONE);
+                        checkbox2.setVisibility(View.GONE);
+                    } else if (all_gender == 1) {
+                        amenity1.setText("All-gender");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.GONE);
+                        checkbox2.setVisibility(View.GONE);
+                    } else if (diaper == 1) {
+                        amenity1.setText("Diaper changing station");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.VISIBLE);
+                        amenity2.setVisibility(View.GONE);
+                        checkbox2.setVisibility(View.GONE);
+                    } else {
+                        amenity1.setText("No amenities recorded");
+
+                        amenity1.setVisibility(View.VISIBLE);
+                        checkbox1.setVisibility(View.GONE);
+                        amenity2.setVisibility(View.GONE);
+                        checkbox2.setVisibility(View.GONE);
+                    }
+
                 }
                 cursor.close();
                 return false;
