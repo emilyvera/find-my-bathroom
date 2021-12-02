@@ -60,8 +60,10 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
                     // doStuff
                     try {
                         addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        Log.v("addresses", String.valueOf(addresses));
                         address = addresses.get(0).getAddressLine(0);
                         address = address.split(",", 2)[0];
+                        Log.v("address", address);
                     } catch(Exception e) {
                         address = "No address found";
                         Log.d("myTag","No addresses found");
