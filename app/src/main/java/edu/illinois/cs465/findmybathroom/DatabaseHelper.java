@@ -28,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_12 = "TOTAL_VOTES";
     public static final String COL_13 = "IS_COMMUNITY_VERIFIED";
     public static final String COL_14 = "ADDRESS";
+    public static final String COL_15 = "DISTANCE";
 
     // possible extra fields
     public static final String is_free = "bathroom_data.db";
@@ -54,7 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "SUM_RATINGS REAL," +
                 "TOTAL_VOTES INTEGER," +
                 "IS_COMMUNITY_VERIFIED INTEGER," +
-                "ADDRESS TEXT)");
+                "ADDRESS TEXT," +
+                "DISTANCE REAL)");
     }
 
     @Override
@@ -65,7 +67,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean insertData(String location_type, Double latitude, Double longitude,
                               String building_name, int is_all_gender, int is_wheelchair_accessible,
-                              int has_diaper_stations, String location_description, String address) {
+                              int has_diaper_stations, String location_description, String address,
+                              Double distance) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -81,7 +84,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_11, 0); // default sum of ratings is 0
         contentValues.put(COL_12, 0); // default total votes is 0
         contentValues.put(COL_13, 0); // default not community verified
-        contentValues.put(COL_14, address); // default not community verified
+        contentValues.put(COL_14, address);
+        contentValues.put(COL_15, distance);
 
         long result = db.insert(TABLE_NAME, null, contentValues);
 

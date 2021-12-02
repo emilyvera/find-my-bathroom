@@ -65,6 +65,8 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     int bathroomId;
     ImageView verifiedCheck;
     TextView locationDescription;
+    TextView addressText;
+    TextView distanceText;
 
     // Filters start
 
@@ -147,9 +149,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     i.putExtra("id", bathroomId);
                     startActivity(i);
                     break;
-//                case R.id.searchButton:
-//                    expandFilter();
-//                    break;
             }
         }
     };
@@ -242,13 +241,11 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         reviewButton = (Button) findViewById(R.id.reviewButton);
         reviewButton.setOnClickListener(handler);
 
-//        findViewById(R.id.searchButton).setOnClickListener(handler);
-
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-
         verifiedCheck = (ImageView) findViewById(R.id.verified_bathroom_check);
-
         locationDescription = (TextView) findViewById(R.id.locationDescriptionText);
+        addressText = (TextView) findViewById(R.id.addressText);
+        distanceText = (TextView) findViewById(R.id.distanceText);
     }
 
     /**
@@ -301,10 +298,16 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     int all_gender = cursor.getInt(cursor.getColumnIndex("IS_ALL_GENDER"));
                     int wheelchair = cursor.getInt(cursor.getColumnIndex("IS_WHEELCHAIR_ACCESSIBLE"));
                     int diaper = cursor.getInt(cursor.getColumnIndex("HAS_DIAPER_STATION"));
+
+                    String address = cursor.getString(cursor.getColumnIndex("ADDRESS"));
+                    double distance = cursor.getDouble(cursor.getColumnIndex("DISTANCE"));
+
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
                     locationDescription.setText("• " + description);
+                    addressText.setText("• " + address);
+                    distanceText.setText("• " + distance + " mi");
 
                     if (isCommunityVerified == 0) {
                         verifiedCheck.setVisibility(View.INVISIBLE);

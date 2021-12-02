@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,16 +51,22 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
             int has_diaper_station = extras.getInt("has_diaper_station");
             String location_description = extras.getString("location_description");
             String address = "";
+            float[] results = new float[1];
+            Location.distanceBetween(40.107519, -88.22722, latitude, longitude, results);
+            double distance = results[0] / 1609.344; // convert meters to miles
+            distance = Math.round(distance * 100.0) / 100.0;
             switch (v.getId()) {
                 case R.id.yesButton:
                     // doStuff
                     try {
                         addresses = geocoder.getFromLocation(latitude, longitude, 1);
                         address = addresses.get(0).getAddressLine(0);
+                        address = address.split(",", 2)[0];
                     } catch(Exception e) {
+                        address = "No address found";
                         Log.d("myTag","No addresses found");
                     }
-                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description, address);
+                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description, address, distance);
                     startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
                 case R.id.noButton:
