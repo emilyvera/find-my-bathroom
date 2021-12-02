@@ -3,7 +3,10 @@ package edu.illinois.cs465.findmybathroom;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,12 +18,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+import java.util.Locale;
+
 import edu.illinois.cs465.findmybathroom.databinding.ActivitySelectionLocationBinding;
 
 public class SelectionLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivitySelectionLocationBinding binding;
+
+    Geocoder geocoder;
+    List<Address> addresses;
+
 
     private Button btnYes;
     private Button btnNo;
@@ -39,11 +49,17 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
             int is_wheelchair_accessible = extras.getInt("is_wheelchair_accessible");
             int has_diaper_station = extras.getInt("has_diaper_station");
             String location_description = extras.getString("location_description");
-
+            String address = "";
             switch (v.getId()) {
                 case R.id.yesButton:
                     // doStuff
-                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description);
+                    try {
+                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        address = addresses.get(0).getAddressLine(0);
+                    } catch(Exception e) {
+                        Log.d("myTag","No addresses found");
+                    }
+                    bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description, address);
                     startActivity(new Intent(SelectionLocationActivity.this, HomeScreenActivity.class));
                     break;
                 case R.id.noButton:
@@ -91,6 +107,7 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
         btnNo.setOnClickListener(handler);
 
         bathroomDb = new DatabaseHelper(this);
+        geocoder = new Geocoder(this,Locale.getDefault());
     }
 
     /**
