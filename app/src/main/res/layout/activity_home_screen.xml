@@ -441,6 +441,7 @@
                    android:text="• 157 S Mattis Ave"/>
 
                 <TextView
+                    android:id="@+id/distanceText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
