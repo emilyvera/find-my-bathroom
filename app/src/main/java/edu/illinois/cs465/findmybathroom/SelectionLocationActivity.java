@@ -56,7 +56,9 @@ public class SelectionLocationActivity extends FragmentActivity implements OnMap
                     try {
                         addresses = geocoder.getFromLocation(latitude, longitude, 1);
                         address = addresses.get(0).getAddressLine(0);
+                        address = address.split(",", 2)[0];
                     } catch(Exception e) {
+                        address = "No address found";
                         Log.d("myTag","No addresses found");
                     }
                     bathroomDb.insertData(location_type, latitude, longitude, building_name, is_all_gender, is_wheelchair_accessible, has_diaper_station, location_description, address);

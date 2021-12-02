@@ -274,25 +274,6 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="50dp" />
-
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/searchButton"-->
-        <!--            android:layout_width="85dp"-->
-        <!--            android:layout_height="85dp"-->
-        <!--            android:layout_gravity="center_horizontal|bottom"-->
-        <!--            android:background="@drawable/roundcorner"-->
-        <!--            android:layout_marginBottom="30dp"-->
-        <!--            android:src="@android:drawable/ic_menu_search" />-->
-
-        <!--        <ImageButton-->
-        <!--            android:id="@+id/addButton"-->
-        <!--            android:layout_width="50dp"-->
-        <!--            android:layout_height="50dp"-->
-        <!--            android:layout_gravity="center_horizontal|bottom"-->
-        <!--            android:background="@drawable/roundcorner"-->
-        <!--            android:layout_marginBottom="25dp"-->
-        <!--            android:layout_marginLeft="70dp"-->
-        <!--            android:src="@android:drawable/ic_menu_add" />-->
     </fragment>
 
     <LinearLayout
@@ -450,6 +431,7 @@
                     android:src="@drawable/walking_icon"/>
 
                <TextView
+                   android:id="@+id/addressText"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:textStyle="bold"

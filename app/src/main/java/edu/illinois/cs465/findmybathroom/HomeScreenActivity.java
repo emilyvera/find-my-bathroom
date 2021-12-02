@@ -61,6 +61,7 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
     int bathroomId;
     ImageView verifiedCheck;
     TextView locationDescription;
+    TextView addressText;
 
     // Filters start
 
@@ -143,9 +144,6 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     i.putExtra("id", bathroomId);
                     startActivity(i);
                     break;
-//                case R.id.searchButton:
-//                    expandFilter();
-//                    break;
             }
         }
     };
@@ -233,13 +231,13 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
         reviewButton = (Button) findViewById(R.id.reviewButton);
         reviewButton.setOnClickListener(handler);
 
-//        findViewById(R.id.searchButton).setOnClickListener(handler);
-
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         verifiedCheck = (ImageView) findViewById(R.id.verified_bathroom_check);
 
         locationDescription = (TextView) findViewById(R.id.locationDescriptionText);
+
+        addressText = (TextView) findViewById(R.id.addressText);
     }
 
     /**
@@ -288,10 +286,12 @@ public class HomeScreenActivity extends FragmentActivity implements OnMapReadyCa
                     float rating = cursor.getFloat(cursor.getColumnIndex("RATING"));
                     String description = cursor.getString(cursor.getColumnIndex("LOCATION_DESCRIPTION"));
                     int isCommunityVerified = cursor.getInt(cursor.getColumnIndex("IS_COMMUNITY_VERIFIED"));
+                    String address = cursor.getString(cursor.getColumnIndex("ADDRESS"));
                     Log.v("homescreen rating", String.valueOf(rating));
                     ratingBar.setRating(rating);
                     bathroomText.setText(bathroomName);
                     locationDescription.setText("• " + description);
+                    addressText.setText("• " + address);
 
                     if (isCommunityVerified == 0) {
                         verifiedCheck.setVisibility(View.INVISIBLE);
